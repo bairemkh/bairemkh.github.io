@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bairem Khedhri | The Digital Headquarters</title>
+  <meta name="description" content="Walk through the 3D headquarters of Bairem Khedhri, mobile engineer, CTO and team lead. Flutter, Kotlin and SwiftUI apps, and the teams that shipped them.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <meta property="og:title" content="Bairem Khedhri | The Digital Headquarters">
+  <meta property="og:description" content="Mobile engineering and team leadership, one room at a time.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:ital,wght@0,400;0,500;1,700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Noto+Kufi+Arabic:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="hq.css">
+  <script type="importmap">
+    { "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    } }
+  </script>
+</head>
+<body>
+<canvas id="world" aria-label="3D model of an office building with six rooms"></canvas>
+
+<!-- HUD -->
+<header class="hud-top glass" id="hud-top">
+  <a class="brand" href="#" data-go="0" dir="ltr">Bairem <em>K.</em></a>
+  <nav class="floor-map" aria-label="Floor map">
+    <button data-go="0"><span>00</span>Who I am</button>
+    <button data-go="1"><span>01</span>Experience</button>
+    <button data-go="2"><span>02</span>Skills</button>
+    <button data-go="3"><span>03</span>Projects</button>
+    <button data-go="4"><span>04</span>Education</button>
+    <button data-go="5"><span>05</span>Contact</button>
+  </nav>
+  <div class="lang-switch" role="group" aria-label="Language">
+    <button type="button" data-lang="en" lang="en" aria-pressed="true">EN</button>
+    <button type="button" data-lang="fr" lang="fr" aria-pressed="false">FR</button>
+    <button type="button" data-lang="ar" lang="ar" aria-pressed="false">عربي</button>
+  </div>
+</header>
+
+<aside class="panel glass" id="panel">
+  <button class="sheet-toggle" id="sheet-toggle" type="button" aria-expanded="false" aria-controls="panel">Read more</button>
+  <!-- 00 Lobby -->
+  <section class="room" data-room="0">
+    <img class="portrait" src="img/profile.jpg" alt="Portrait of Bairem Khedhri" width="1264" height="842">
+    <p class="eyebrow">00 &middot; Who I am</p>
+    <h2>Welcome to my world. <em>Enjoy the experience.</em></h2>
+    <p>I'm <strong>Bairem Khedhri</strong>. I build Android, iOS and Flutter apps, the Node.js and Spring Boot backends they talk to, and I lead the people who build them with me. I started in multimedia and computer science, specialised in mobile during my engineering degree, led a mobile team in Bangkok, then co-founded Appaxis Innovations, where I am CTO. Along the way I taught 60+ students how to build apps of their own. Walk through the building: experience, skills, projects, education, and a room where you can email me.</p>
+    <ul class="hl">
+      <li><b>Since 2022</b>shipping mobile apps and the APIs behind them</li>
+      <li><b>CTO</b>and co-founder of Appaxis Innovations</li>
+      <li><b>Team lead</b>of an international mobile team in Bangkok</li>
+      <li><b>Open</b>to relocation, based in Tunis</li>
+    </ul>
+    <h3>Languages</h3>
+    <ul class="langs">
+      <li><b>Arabic</b><span>Native</span></li>
+      <li><b>English</b><span>Professional</span></li>
+      <li><b>French</b><span>Spoken</span></li>
+    </ul>
+    <p class="muted">Title on the door: Mobile and Backend Engineer, CTO and Team Lead.</p>
+  </section>
+
+  <!-- 01 Experience -->
+  <section class="room" data-room="1" hidden>
+    <p class="eyebrow red">01 &middot; Experience</p>
+    <h2>Teams led, apps shipped, <em>lessons kept.</em></h2>
+    <div class="cred top" id="exp-appaxis"><p class="meta">Jul 2023 to now &middot; Ariana, Tunisia</p><h4>Appaxis Innovations</h4><p class="role">Co-founder, CTO and mobile engineer</p>
+      <ul class="check">
+        <li>Own the mobile architecture and delivery decisions, and turn business requirements into precise technical specs for the Flutter and backend team.</li>
+        <li>Run rapid prototyping and testing cycles to prioritise high-value features and keep the apps stable.</li>
+        <li>Lead developers and designers across projects, and hired and trained interns in IT, design and marketing.</li>
+        <li>Set the team's standards for secure coding, API integration and code review.</li>
+      </ul></div>
+    <div class="cred"><p class="meta">2024 &middot; B&eacute;ja and Siliana, Tunisia</p><h4>Tunisia Development Foundation</h4><p class="role">Mobile and backend development trainer</p>
+      <ul class="check">
+        <li>Taught 60+ students Kotlin, Jetpack Compose, Flutter and Node.js, with MVVM, Clean Architecture, Git and Scrum.</li>
+        <li>More than 80% of them went on to secure internships.</li>
+      </ul></div>
+    <div class="cred top" id="exp-togtog"><p class="meta">Jun 2022 to Dec 2022 &middot; Bangkok, Thailand</p><h4>TogTog.io</h4><p class="role">Mobile development team lead</p>
+      <ul class="check">
+        <li>Led an international team of developers and designers and delivered production Android apps on schedule.</li>
+        <li>Ran the sprints and code reviews, and refactored for performance, responsiveness and quality.</li>
+        <li>Introduced MVVM and design patterns; built with Kotlin, XML, Room and Retrofit.</li>
+        <li>Worked directly with the CEO and CTO on strategic decisions that sped up the startup's growth.</li>
+      </ul></div>
+    <div class="cred"><p class="meta">2022 to now &middot; Remote</p><h4>Freelance</h4><p class="role">Mobile and backend developer</p>
+      <ul class="check">
+        <li>CrowdUp: a Flutter social app for events, with real-time chat, reservations and QR-code tickets on a Spring Boot API.</li>
+        <li>OnePass: a secure password vault in Flutter with encrypted storage and a JWT-secured Spring Boot backend.</li>
+        <li>Ekri: a car rental app for Tunisia, built with Flutter and Node.js servers.</li>
+      </ul></div>
+  </section>
+
+  <!-- 02 Skills -->
+  <section class="room" data-room="2" hidden>
+    <p class="eyebrow">02 &middot; Skills</p>
+    <h2>Lead the team, build the app, <em>run the server.</em></h2>
+
+    <h3>1 &middot; Team leadership</h3>
+    <p>Clear specs, honest code reviews and short feedback loops. I translate what the business needs into something engineers can build, then stay close enough to help without micromanaging.</p>
+    <ul class="check">
+      <li>Led mobile teams at TogTog.io and Appaxis Innovations, working directly with founders on strategy.</li>
+      <li>Sprint planning, Agile and Scrum, and code review as a team habit.</li>
+      <li>Product roadmaps and technical specs written from business requirements.</li>
+      <li>Hiring, training and mentoring: 60+ students taught, 80%+ landed internships.</li>
+    </ul>
+    <ul class="chips"><li>Team leadership</li><li>Agile and Scrum</li><li>Sprint planning</li><li>Code review</li><li>Roadmaps</li><li>Technical specs</li><li>Mentoring</li><li>A/B testing</li><li>Jira and Trello</li></ul>
+
+    <h3>2 &middot; Mobile engineering</h3>
+    <p>Native and cross-platform apps, released to Google Play and the App Store.</p>
+    <ul class="logos"><li><img src="img/tech/flutter.svg" alt="" width="40" height="40"><span>Flutter</span></li><li><img src="img/tech/dart.svg" alt="" width="40" height="40"><span>Dart</span></li><li><img src="img/tech/kotlin.svg" alt="" width="40" height="40"><span>Kotlin</span></li><li><img src="img/tech/jetpackcompose.svg" alt="" width="40" height="40"><span>Compose</span></li><li><img src="img/tech/swift.svg" alt="" width="40" height="40"><span>Swift</span></li><li><img src="img/tech/apple.svg" alt="" width="40" height="40"><span>SwiftUI</span></li><li><img src="img/tech/android.svg" alt="" width="40" height="40"><span>Android</span></li><li><img src="img/tech/java.svg" alt="" width="40" height="40"><span>Java</span></li></ul>
+    <ul class="chips"><li>Flutter and Dart</li><li>Kotlin</li><li>Jetpack Compose</li><li>Swift</li><li>SwiftUI</li><li>Java</li><li>Coroutines</li><li>Futures and Streams</li><li>GetX</li><li>Provider and BLoC</li><li>Retrofit, OkHttp, Room</li><li>JUnit and Espresso</li></ul>
+    <ul class="check">
+      <li>Clean Architecture, MVVM and MVC, so a second developer can find their way around.</li>
+      <li>Coroutines and lifecycle-aware components to keep work off the main thread and avoid crashes.</li>
+    </ul>
+
+    <h3>3 &middot; Backend engineering</h3>
+    <p>Most of my apps talk to an API I built as well.</p>
+    <ul class="logos"><li><img src="img/tech/nodejs.svg" alt="" width="40" height="40"><span>Node.js</span></li><li><img src="img/tech/express.svg" alt="" width="40" height="40"><span>Express</span></li><li><img src="img/tech/spring.svg" alt="" width="40" height="40"><span>Spring Boot</span></li><li><img src="img/tech/java.svg" alt="" width="40" height="40"><span>Java</span></li><li><img src="img/tech/mongodb.svg" alt="" width="40" height="40"><span>MongoDB</span></li><li><img src="img/tech/mysql.svg" alt="" width="40" height="40"><span>SQL</span></li><li><img src="img/tech/socketio.svg" alt="" width="40" height="40"><span>Socket.io</span></li><li><img src="img/tech/swagger.svg" alt="" width="40" height="40"><span>Swagger</span></li><li><img src="img/tech/php.svg" alt="" width="40" height="40"><span>PHP</span></li><li><img src="img/tech/dotnetcore.svg" alt="" width="40" height="40"><span>.NET</span></li></ul>
+    <div class="cred"><p class="meta">Node.js &middot; Express &middot; MongoDB</p><p>Backends for Unimatch and the TogTog marketplace. Code Magician generates complete Node.js projects from class diagrams.</p></div>
+    <div class="cred"><p class="meta">Java &middot; Spring Boot &middot; Swagger</p><p>REST APIs for OnePass, with JWT-authenticated calls, and for CrowdUp, with reservations, real-time chat and QR tickets.</p></div>
+    <div class="cred"><p class="meta">Real-time and security</p><p>Socket.io and WebSockets for live chat; OAuth2, JWT, encryption and limited response data to protect users.</p></div>
+    <ul class="chips"><li>Node.js</li><li>Express</li><li>Spring Boot</li><li>REST</li><li>Swagger</li><li>Socket.io</li><li>OAuth2</li><li>JWT</li><li>MongoDB</li><li>SQL</li><li>NoSQL</li><li>PHP</li><li>.NET</li></ul>
+
+    <h3>Delivery</h3>
+    <ul class="logos"><li><img src="img/tech/git.svg" alt="" width="40" height="40"><span>Git</span></li><li><img src="img/tech/github.svg" alt="" width="40" height="40"><span>GitHub</span></li><li><img src="img/tech/gitlab.svg" alt="" width="40" height="40"><span>GitLab</span></li><li><img src="img/tech/jenkins.svg" alt="" width="40" height="40"><span>Jenkins</span></li><li><img src="img/tech/amazonwebservices.svg" alt="" width="40" height="40"><span>AWS</span></li><li><img src="img/tech/azure.svg" alt="" width="40" height="40"><span>Azure</span></li><li><img src="img/tech/jira.svg" alt="" width="40" height="40"><span>Jira</span></li><li><img src="img/tech/trello.svg" alt="" width="40" height="40"><span>Trello</span></li></ul>
+  </section>
+
+  <!-- 03 Showroom -->
+  <section class="room" data-room="3" hidden>
+    <div>
+      <p class="eyebrow red">03 &middot; Projects</p>
+      <h2>Real apps <em>on real pedestals.</em></h2>
+      <p>Click a phone in the room, or pick one here.</p>
+    </div>
+    <div class="proj-list" id="proj-list"></div>
+  </section>
+
+  <!-- 04 Academy -->
+  <section class="room" data-room="4" hidden>
+    <p class="eyebrow">04 &middot; Education</p>
+    <h2>Degrees, certificates <em>and a lot of whiteboard marker.</em></h2>
+    <h3>Education</h3>
+    <div class="cred"><p class="meta">Sep 2021 to Nov 2024 &middot; Ariana</p><h4>ESPRIT</h4><p>Engineering degree in computer science, mobile specialisation. A master's degree equivalent.</p></div>
+    <div class="cred"><p class="meta">Sep 2018 to Jun 2021 &middot; Manouba</p><h4>ISAMM, Higher Institute of Arts and Multimedia</h4><p>Bachelor's degree in computer science.</p></div>
+    <h3>Certificates</h3>
+    <ul class="check"><li>HackerRank Java certificate</li><li>HackerRank Problem Solving certificate</li></ul>
+    <h3>Teaching and mentorship</h3>
+    <div class="cred"><p class="meta">2024 &middot; B&eacute;ja and Siliana</p><h4>Tunisia Development Foundation</h4><p>Mobile and backend trainer. Taught 60+ students Kotlin, Jetpack Compose, Flutter and Node.js, with MVVM, Clean Architecture, Git and Scrum. More than 80% of them went on to secure internships.</p></div>
+    <h3>Coursework</h3>
+    <ul class="chips"><li>Data structures</li><li>Software engineering</li><li>Systems programming</li><li>Database management</li><li>UML</li><li>Project management</li><li>Web development</li><li>Mobile development</li></ul>
+  </section>
+
+  <!-- 05 Boardroom -->
+  <section class="room" data-room="5" hidden>
+    <p class="eyebrow red">05 &middot; Contact</p>
+    <h2>Pull up a chair. <em>The meeting will be short.</em></h2>
+    <p>Open to mobile engineering and team lead roles, relocation and interesting projects.</p>
+    <form class="contact" id="contact">
+      <label>Your name<input name="name" required autocomplete="name"></label>
+      <label>Your email<input name="email" type="email" required autocomplete="email"></label>
+      <label>What is it about?
+        <select name="topic"><option>A job opportunity</option><option>A project</option><option>Something else</option></select>
+      </label>
+      <label>Message<textarea name="message" rows="4" required></textarea></label>
+      <button class="btn btn-primary" type="submit">Send email</button>
+      <p class="muted small">This opens your own email app with the message filled in. Nothing is stored on this site.</p>
+    </form>
+    <div class="links">
+      <a class="btn btn-red" href="assets/Bairem-Khedhri-Resume.pdf" download>Download resume (PDF)</a>
+      <a class="btn btn-ghost" href="mailto:bairemkh@gmail.com?subject=Let%27s%20schedule%20a%20call">Schedule a call</a>
+    </div>
+    <ul class="direct">
+      <li><span>Email</span><a href="mailto:bairemkh@gmail.com">bairemkh@gmail.com</a></li>
+      <li><span>Phone</span><a href="tel:+21650646989">+216 50 646 989</a></li>
+      <li><span>LinkedIn</span><a href="https://www.linkedin.com/in/bairem-khedhri/" target="_blank" rel="noopener">in/bairem-khedhri</a></li>
+      <li><span>GitHub</span><a href="https://github.com/bairemkh" target="_blank" rel="noopener">bairemkh</a></li>
+    </ul>
+    <p class="muted small legal-links"><a href="privacy.html">Privacy policy</a> &middot; <a href="terms.html">Terms and conditions</a> &middot; &copy; <span id="year">2026</span> Bairem Khedhri</p>
+  </section>
+</aside>
+
+<div class="hud-bottom glass" id="hud-bottom">
+  <button class="nav-btn" id="prev" aria-label="Previous room">&larr;</button>
+  <div class="where"><span id="where-num" dir="ltr">00 / 05</span><b id="where-name">Who I am</b></div>
+  <button class="nav-btn" id="next" aria-label="Next room">&rarr;</button>
+</div>
+
+<div class="tip glass" id="tip" hidden></div>
+
+<!-- Project modal -->
+<div class="modal" id="modal" hidden>
+  <div class="modal-card glass" role="dialog" aria-modal="true" aria-labelledby="m-title">
+    <button class="close" id="m-close" aria-label="Close">&times;</button>
+    <div class="m-art"><img id="m-img" alt=""></div>
+    <div class="m-body">
+      <p class="meta" id="m-meta"></p>
+      <h3 id="m-title"></h3>
+      <p class="quip" id="m-quip"></p>
+      <p id="m-desc"></p>
+      <p class="meta" id="m-role-label">Role</p><p id="m-role"></p>
+      <ul class="chips" id="m-tags"></ul>
+    </div>
+  </div>
+</div>
+
+<noscript><p style="padding:24px">This 3D portfolio needs JavaScript. You can reach me at <a href="mailto:bairemkh@gmail.com">bairemkh@gmail.com</a>.</p></noscript>
+<script type="module" src="hq.js"></script>
+</body>
+</html>
