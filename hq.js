@@ -375,6 +375,7 @@ const add = (parent, geo, mat, x = 0, y = 0, z = 0, ry = 0) => {
 };
 const box = (w, h, d, r = 0.04) => r ? new RoundedBoxGeometry(w, h, d, 3, Math.min(r, w / 2 - 0.001, h / 2 - 0.001, d / 2 - 0.001)) : new THREE.BoxGeometry(w, h, d);
 const clickables = [];
+const ROOMG = []; // one group per room
 const animated = [];
 const noShadow = (m) => { m.userData.noShadow = true; return m; };
 
@@ -426,9 +427,8 @@ sun.shadow.mapSize.setScalar(isNarrow() ? 1024 : 2048);
 Object.assign(sun.shadow.camera, { left: -13, right: 13, top: 10, bottom: -10, near: 1, far: 40 });
 sun.shadow.bias = -0.0004; sun.shadow.normalBias = 0.02;
 scene.add(sun, sun.target);
-ROOMS.forEach((_, i) => {
-  const p = new THREE.PointLight(i % 2 ? 0xffd9cf : 0xd9fff4, 18, 16, 1.8); p.position.set(i * SPACING, H - 0.7, -3); scene.add(p);
-});
+// One room light that travels with the visitor: every extra light makes every lit surface more expensive
+const roomLight = new THREE.PointLight(0xffeee6, 18, 16, 1.8); roomLight.position.set(0, H - 0.7, -3); scene.add(roomLight);
 
 // Dust floating in the light
 {
@@ -641,7 +641,7 @@ function placeCharacter(parent, pose, x, y, z, ry, idle) {
 }
 
 function buildLobby(x) {
-  const g = new THREE.Group(); g.position.x = x; scene.add(g);
+  const g = new THREE.Group(); g.position.x = x; scene.add(g); ROOMG[Math.round(x / SPACING)] = g;
   const sign = ltex(2048, 640, (c, w) => {
     text(c, "BAIREM KHEDHRI", w / 2, 300, serif(220), C.mint, "center");
     text(c, L("signSub"), w / 2, 450, mono(lang === "ar" ? 64 : 56), C.sage, "center");
@@ -719,7 +719,7 @@ function expPlaque(roleK, name, whenK, linesK, accent) {
   });
 }
 function buildExecutive(x) {
-  const g = new THREE.Group(); g.position.x = x; scene.add(g);
+  const g = new THREE.Group(); g.position.x = x; scene.add(g); ROOMG[Math.round(x / SPACING)] = g;
   // Wall display dedicated to the two headline roles
   const board = ltex(1600, 820, (c, w, h) => {
     rr(c, 0, 0, w, h, 24, C.ink);
@@ -752,7 +752,6 @@ function buildExecutive(x) {
     face.userData = { tip: () => `${L("tipRead")} ${m.id === "appaxis" ? "Appaxis Innovations" : "TogTog.io"}`, exp: m.id }; clickables.push(face);
     // glowing base ring and light for the emblem
     noShadow(add(mg, new THREE.TorusGeometry(0.62, 0.015, 8, 80), m.glowM, 0, 1.2, 0)).rotation.x = Math.PI / 2;
-    const l = new THREE.PointLight(m.light, 3, 4.5); l.position.set(0, 2.6, 0.6); mg.add(l);
     // Company logo: drop the file at img/logos/<id>.png and it replaces the wordmark
     // Company logo on a matte white board (unlit, so lights and reflections never wash it out)
     const wide = m.id === "appaxis";
@@ -806,7 +805,7 @@ function buildExecutive(x) {
 // Room 2: Mobile and backend lab
 // ---------------------------------------------------------------------------
 function buildLab(x) {
-  const g = new THREE.Group(); g.position.x = x; scene.add(g);
+  const g = new THREE.Group(); g.position.x = x; scene.add(g); ROOMG[Math.round(x / SPACING)] = g;
 
   // Architecture wall: mobile clients, API, security, data
   const arch = ltex(2000, 900, (c, w) => {
@@ -997,7 +996,7 @@ function makeSplash(p) {
 }
 
 function buildShowroom(x) {
-  const g = new THREE.Group(); g.position.x = x; scene.add(g);
+  const g = new THREE.Group(); g.position.x = x; scene.add(g); ROOMG[Math.round(x / SPACING)] = g;
   PROJECTS.forEach((p, i) => {
     const px = (i - 2.5) * 2.55, pz = -4.6 - Math.abs(i - 2.5) * 0.45;
     const ped = new THREE.Group(); ped.position.set(px, 0, pz); ped.rotation.y = -(i - 2.5) * 0.08; g.add(ped);
@@ -1044,10 +1043,13 @@ function certTex(titleF, subF, orgF, accent) {
   });
 }
 function buildAcademy(x) {
-  const g = new THREE.Group(); g.position.x = x; scene.add(g);
-  const bookMats = [0x1c5d5f, 0xc2413b, 0x65b8a2, 0xf2e8e2, 0x2a7779, 0xef8a80, 0xcae1e2].map((c) => new THREE.MeshStandardMaterial({ color: c, roughness: 0.75 }));
+  const g = new THREE.Group(); g.position.x = x; scene.add(g); ROOMG[Math.round(x / SPACING)] = g;
+  const bookCols = [0x1c5d5f, 0xc2413b, 0x65b8a2, 0xf2e8e2, 0x2a7779, 0xef8a80, 0xcae1e2];
+  const bookMat = new THREE.MeshStandardMaterial({ roughness: 0.75, envMapIntensity: 0.3 });
+  const bookMats = bookCols.map((c) => new THREE.MeshStandardMaterial({ color: c, roughness: 0.75 }));
   [-6.4, 6.4].forEach((sx) => {
     const shelf = new THREE.Group(); shelf.position.set(sx, 0, -DEPTH / 2 + 0.45); g.add(shelf);
+    const books = [];
     add(shelf, box(3.4, 3.3, 0.06, 0), M.wood, 0, 1.65, -0.3);
     [-1.7, 1.7].forEach((ex) => add(shelf, box(0.06, 3.3, 0.6, 0), M.wood, ex, 1.65, 0));
     for (let r = 0; r < 5; r++) {
@@ -1056,10 +1058,14 @@ function buildAcademy(x) {
       let bx = -1.6;
       while (bx < 1.45) {
         const bw = 0.07 + rand() * 0.09, bh = 0.42 + rand() * 0.24;
-        add(shelf, box(bw, bh, 0.42, 0.005), bookMats[Math.floor(rand() * bookMats.length)], bx + bw / 2, 0.075 + r * 0.8 + bh / 2, 0.02);
+        books.push([bx + bw / 2, 0.075 + r * 0.8 + bh / 2, bw, bh, bookCols[Math.floor(rand() * bookCols.length)]]);
         bx += bw + 0.012;
       }
     }
+    const inst = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 0.42), bookMat, books.length);
+    const mtx = new THREE.Matrix4(), col = new THREE.Color();
+    books.forEach(([px, py, bw, bh, c], k) => { mtx.makeScale(bw, bh, 1).setPosition(px, py, 0.02); inst.setMatrixAt(k, mtx); inst.setColorAt(k, col.set(c)); });
+    shelf.add(inst);
   });
   [
     [() => L("engDeg"), () => L("csMobile"), () => `ESPRIT · 2021 ${L("to")} 2024`, C.teal],
@@ -1103,7 +1109,6 @@ function buildAcademy(x) {
   add(lamp, new THREE.CylinderGeometry(0.015, 0.015, 0.6, 8), M.metal, 0.08, 0.3, 0).rotation.z = -0.28;
   add(lamp, new THREE.ConeGeometry(0.13, 0.2, 32, 1, true), new THREE.MeshPhysicalMaterial({ color: 0xc2413b, roughness: 0.3, side: THREE.DoubleSide }), 0.18, 0.62, 0).rotation.z = 0.5;
   noShadow(add(lamp, new THREE.SphereGeometry(0.04, 12, 12), M.warmGlow, 0.15, 0.56, 0));
-  const lampLight = new THREE.PointLight(0xffd9b0, 2.5, 3.5); lampLight.position.set(0.15, 0.5, 0); lamp.add(lampLight);
   [0, 1, 2].forEach((k) => add(rd, box(0.48, 0.07, 0.34, 0.01), bookMats[k * 2], 0.45, 0.83 + k * 0.072, -0.1, 0.15 * k));
   plant(g, -1.2, -6.9, 1.0);
 }
@@ -1112,7 +1117,7 @@ function buildAcademy(x) {
 // Room 5: Boardroom
 // ---------------------------------------------------------------------------
 function buildBoardroom(x) {
-  const g = new THREE.Group(); g.position.x = x; scene.add(g);
+  const g = new THREE.Group(); g.position.x = x; scene.add(g); ROOMG[Math.round(x / SPACING)] = g;
   add(g, box(7, 0.08, 2.6, 0.04), M.wood, 0, 0.78, -3.4);
   [-2.6, 2.6].forEach((lx) => add(g, box(0.12, 0.74, 1.8, 0.03), M.darkMetal, lx, 0.37, -3.4));
   for (let k = 0; k < 4; k++) [-1, 1].forEach((side) => chair(g, -2.6 + k * 1.75, -3.4 + side * 1.65, side > 0 ? 0 : Math.PI, k % 2 ? M.redFabric : M.tealFabric));
@@ -1147,6 +1152,7 @@ function buildBoardroom(x) {
 // ---------------------------------------------------------------------------
 const clock = new THREE.Clock();
 let current = 0, activeCert = null, hoverObj = null;
+let ensureRoom = () => {};
 function view(i) {
   const x = i * SPACING;
   if (i === 3) return isNarrow()
@@ -1171,6 +1177,7 @@ function flyTo(i, instant = false) {
 }
 function go(i) {
   i = Math.max(0, Math.min(ROOMS.length - 1, i));
+  ensureRoom(i); // a visitor may jump to a room before its idle build ran
   current = i; activeCert = null;
   document.body.dataset.room = String(i);
   flyTo(i);
@@ -1252,6 +1259,22 @@ function resize() {
 window.addEventListener("resize", resize);
 
 const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+// Adaptive quality: after a short warm-up, slow devices drop resolution, then bloom, then soft shadows
+const quality = { bloom: true, level: 0 };
+let fpsFrames = 0, fpsStart = 0;
+function adapt(t) {
+  if (quality.level >= 3 || tween) { fpsStart = t; fpsFrames = 0; return; }
+  if (!fpsStart) fpsStart = t;
+  fpsFrames++;
+  if (t - fpsStart < 2) return;
+  const fps = fpsFrames / (t - fpsStart); fpsStart = t; fpsFrames = 0;
+  if (fps >= 45) { quality.level = 3; return; } // fast enough: stop measuring
+  quality.level++;
+  if (quality.level === 1) { renderer.setPixelRatio(1); composer.setPixelRatio(1); renderer.setSize(innerWidth, innerHeight, false); composer.setSize(innerWidth, innerHeight); }
+  else if (quality.level === 2) quality.bloom = false;
+  else { sun.shadow.mapSize.setScalar(512); sun.shadow.map?.dispose(); sun.shadow.map = null; }
+}
+
 function frame() {
   const t = clock.getElapsedTime();
   if (tween) {
@@ -1270,21 +1293,34 @@ function frame() {
   camera.lookAt(camTarget);
   // keep the shadow light over the room being viewed
   sun.position.set(camTarget.x + 6, 14, 9); sun.target.position.set(camTarget.x, 0, -3);
+  roomLight.position.x = camTarget.x;
+  // only draw rooms near the camera
+  for (let i = 0; i < ROOMG.length; i++) if (ROOMG[i]) ROOMG[i].visible = Math.abs(camera.position.x - i * SPACING) < SPACING * 1.4;
   animated.forEach((f) => f(t));
-  composer.render();
+  if (quality.bloom) composer.render(); else renderer.render(scene, camera);
+  adapt(t);
   requestAnimationFrame(frame);
 }
 
 (async () => {
   await fontsReady();
-  buildLobby(0); buildExecutive(SPACING); buildLab(SPACING * 2); buildShowroom(SPACING * 3); buildAcademy(SPACING * 4); buildBoardroom(SPACING * 5);
-  scene.traverse((o) => {
+  const shadowFlags = (root) => root.traverse((o) => {
     if (!o.isMesh) return;
     const lit = !o.material.isMeshBasicMaterial && !o.material.transparent;
     o.castShadow = lit && !o.userData.noShadow;
     o.receiveShadow = lit;
   });
+  const builders = [buildLobby, buildExecutive, buildLab, buildShowroom, buildAcademy, buildBoardroom];
   const start = Math.max(0, SLUGS.indexOf(location.hash.slice(1)));
+  shadowFlags(scene); // building shell
+  const buildRoom = (i) => { if (ROOMG[i]) return; builders[i](i * SPACING); shadowFlags(ROOMG[i]); };
+  buildRoom(start);
+  // the other rooms are built one per idle slot, nearest first, so the first room appears immediately
+  const rest = [0, 1, 2, 3, 4, 5].filter((i) => i !== start).sort((a, b) => Math.abs(a - start) - Math.abs(b - start));
+  const idle = window.requestIdleCallback || ((f) => setTimeout(f, 30));
+  const next = () => { const i = rest.shift(); if (i === undefined) return; buildRoom(i); idle(next); };
+  idle(next);
+  ensureRoom = buildRoom;
   resize();
   // Arrive from the street: start outside and glide straight in
   camera.position.set(start * SPACING, 6.5, 26); camTarget.set(start * SPACING, 2, -4);

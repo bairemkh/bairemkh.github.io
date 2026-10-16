@@ -195,3 +195,12 @@ Each project phone shows a splash screen built in `makeSplash()` (hq.js); the sa
 | Code Magician | black, light lavender disc behind the logo for contrast | `img/projects/codemagician.png` | #9b4ff0 |
 | TogTog Marketplace | the logo's own off-white | `img/projects/togtog.png` | #1f8a8c |
 The temporary picsum.photos photos are gone.
+
+### Performance
+- Rooms are built lazily: the room in the URL (or Who I am) is built first and shown at once; the other five are built one per idle moment, nearest first. Jumping to a room that isn't built yet builds it on the spot.
+- Only rooms near the camera are drawn.
+- One room light follows the visitor instead of six fixed lights plus three local ones (fewer lights means cheaper surfaces).
+- Books are one instanced draw call per shelf instead of about 80 separate objects.
+- Adaptive quality: if a device runs below 45 fps after a short warm-up, it lowers resolution, then turns off bloom, then lowers shadow detail.
+- three.js modules are preloaded in parallel (`modulepreload` placed after the import map; before it, the module names cannot resolve).
+- Images resized: project logos to 512px or less, portrait to 1000px.
